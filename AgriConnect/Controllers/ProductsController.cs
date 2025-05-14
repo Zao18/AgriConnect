@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace AgriConnect.Controllers
 {
-    [Authorize]
+    //Manages all of the product listings and creation for farmers and employees.
+    [Authorize] //(Rick-Anderson, 2024)
     public class ProductsController : Controller
     {
         private readonly ITableStorageService<FarmerEntity> _farmerService;
@@ -21,7 +22,8 @@ namespace AgriConnect.Controllers
             _farmerService = farmerService;
         }
 
-        public async Task<IActionResult> Index(ProductFilterViewModel filter)
+        //Displays the filtered list of products
+        public async Task<IActionResult> Index(ProductFilterViewModel filter) //(tdykstra, 2024)
         {
             try
             {
@@ -84,6 +86,7 @@ namespace AgriConnect.Controllers
             }
         }
 
+        //displays the create product form
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -101,11 +104,12 @@ namespace AgriConnect.Controllers
             }
             catch (Exception)
             {
-                TempData["Error"] = "An error occurred while preparing the form.";
+                TempData["Error"] = "An error occurred while preparing the form";
                 return RedirectToAction(nameof(Index));
             }
         }
 
+        // this handle product creation
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductEntity product)
@@ -113,7 +117,7 @@ namespace AgriConnect.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    throw new ApplicationException("Invalid form submission.");
+                    throw new ApplicationException("Invalid form submission");
 
                 product.ProductionDate = DateTime.SpecifyKind(product.ProductionDate, DateTimeKind.Utc);
 
@@ -125,12 +129,12 @@ namespace AgriConnect.Controllers
 
                 await _productService.AddEntityAsync(product);
 
-                TempData["Success"] = "Product created successfully.";
+                TempData["Success"] = "Product created successfully";
                 return RedirectToAction("Index");
             }
             catch (Exception)
             {
-                TempData["Error"] = "An error occurred while creating the product.";
+                TempData["Error"] = "An error occurred while creating the product";
 
                 try
                 {
@@ -150,6 +154,7 @@ namespace AgriConnect.Controllers
             }
         }
 
+        // this handles editing a product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductEntity product)
@@ -162,16 +167,17 @@ namespace AgriConnect.Controllers
                 product.ProductionDate = DateTime.SpecifyKind(product.ProductionDate, DateTimeKind.Utc);
                 await _productService.UpdateEntityAsync(product);
 
-                TempData["Success"] = "Product updated successfully.";
+                TempData["Success"] = "Product updated successfully";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception)
             {
-                TempData["Error"] = "An error occurred while updating the product.";
+                TempData["Error"] = "An error occurred while updating the product";
                 return View(product);
             }
         }
 
+        // this handles deleting a product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string partitionKey, string rowKey)
@@ -179,11 +185,11 @@ namespace AgriConnect.Controllers
             try
             {
                 await _productService.DeleteEntityAsync(partitionKey, rowKey);
-                TempData["Success"] = "Product deleted successfully.";
+                TempData["Success"] = "Product deleted successfully";
             }
             catch (Exception)
             {
-                TempData["Error"] = "Failed to delete the product.";
+                TempData["Error"] = "Failed to delete the product";
             }
 
             return RedirectToAction(nameof(Index));

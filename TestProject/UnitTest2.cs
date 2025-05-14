@@ -39,18 +39,14 @@ namespace TestProject
 
             var controller = new FarmersController(mockFarmerService.Object, mockProductService.Object);
 
-            // Fake ModelState is valid by manually validating the model
             ValidateModel(newFarmer, controller);
 
-            // TempData setup (required by controller if you use it)
             controller.TempData = new TempDataDictionary(
                 new DefaultHttpContext(),
                 Mock.Of<ITempDataProvider>());
 
-            // Act
             var result = await controller.Create(newFarmer);
 
-            // Assert
             var redirect = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", redirect.ActionName);
             mockFarmerService.Verify(s => s.AddEntityAsync(It.IsAny<FarmerEntity>()), Times.Once);

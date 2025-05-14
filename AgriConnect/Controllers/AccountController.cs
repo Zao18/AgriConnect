@@ -13,6 +13,7 @@ using AgriConnect.Services;
 
 namespace AgriConnect.Controllers
 {
+    //AccountController handles user registration login and logout and redirects based on user role
     public class AccountController : Controller
     {
         private readonly ITableStorageService<ApplicationUser> _tableStorage;
@@ -24,26 +25,28 @@ namespace AgriConnect.Controllers
             _farmerService = farmerService;
         }
 
+        //display registration form
         [HttpGet]
         public IActionResult Register() => View();
 
+        //handles the users registration
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Please correct the highlighted errors.");
+                ModelState.AddModelError("", "Please correct the highlighted errors");
                 return View(model);
             }
 
             try
             {
-                // Check if user already exists
+                //Checks if the user already exists
                 var existingUser = await _tableStorage.GetEntityAsync("Users", model.UserName);
                 if (existingUser != null)
                 {
-                    ModelState.AddModelError("", "User already exists with this username.");
+                    ModelState.AddModelError("", "A user already exists with that username");
                     return View(model);
                 }
 
@@ -58,48 +61,50 @@ namespace AgriConnect.Controllers
                 };
 
                 await _tableStorage.AddEntityAsync(userEntity);
-                TempData["SuccessMessage"] = "Registration successful. Please log in.";
+                TempData["SuccessMessage"] = "Registration was successful";
                 return RedirectToAction("Login", "Account");
             }
             catch (RequestFailedException ex)
             {
-                ModelState.AddModelError("", "A storage error occurred while creating the user. Please try again.");
-                // Optionally log the exception: ex.Message
+                ModelState.AddModelError("", "A storage error has occurred");
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "An unexpected error occurred. Please try again later.");
-                // Optionally log the exception: ex.Message
+                ModelState.AddModelError("", "An unexpected error occurred");
             }
 
             return View(model);
         }
 
-        private string HashPassword(string password)
+        //hashes the password using SHA-256
+        private string HashPassword(string password) //(www.youtube.com, n.d.)
         {
-            using var sha256 = SHA256.Create();
+            using var sha256 = SHA256.Create(); 
             var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             return Convert.ToBase64String(hashBytes);
         }
 
+        //Checks if the password matches the stored hashed password
         private bool VerifyPassword(string storedHash, string password)
         {
             return storedHash == HashPassword(password);
         }
 
+        //displays the login form
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        // handles the login for the employee and the farmers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Please fill in all required fields.");
+                ModelState.AddModelError("", "Please fill in all of the required fields");
                 return View(model);
             }
 
@@ -108,14 +113,14 @@ namespace AgriConnect.Controllers
                 ApplicationUser user = null;
                 FarmerEntity farmer = null;
 
-                // Try to find as Admin or general user
+                //this tries to find as employees or general user
                 try
                 {
                     user = await _tableStorage.GetEntityAsync("Users", model.UserName);
                 }
                 catch (RequestFailedException)
                 {
-                    // Storage error or user not found — continue to check farmers
+                    // storage error or user not found
                 }
 
                 if (user != null && VerifyPassword(user.PasswordHash, model.Password))
@@ -127,20 +132,20 @@ namespace AgriConnect.Controllers
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme); //(Rick-Anderson, 2024b)
                     var principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
                     return RedirectToAction("RedirectByRole", "Account");
                 }
 
-                // Try as a Farmer
+                // tries as farmer
                 try
                 {
                     farmer = await _farmerService.GetEntityAsync("Farmers", model.UserName);
                 }
                 catch (RequestFailedException)
                 {
-                    // Farmer not found
+                    //the farmer was not found
                 }
 
                 if (farmer != null && VerifyPassword(farmer.PasswordHash, model.Password))
@@ -152,40 +157,43 @@ namespace AgriConnect.Controllers
                 new Claim(ClaimTypes.Role, "Farmer")
             };
 
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme); // (Rick - Anderson, 2024b)
                     var principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
                     return RedirectToAction("RedirectByRole", "Account");
                 }
 
-                // Neither user nor farmer was found or password was incorrect
-                ModelState.AddModelError("", "Invalid username or password.");
+                //employee or farmer was found or password was incorrect
+                ModelState.AddModelError("", "Invalid username or password");
             }
             catch (RequestFailedException)
             {
-                ModelState.AddModelError("", "A system error occurred while attempting to log in. Please try again.");
+                ModelState.AddModelError("", "A system error occurred");
             }
             catch (Exception)
             {
-                ModelState.AddModelError("", "An unexpected error occurred. Please contact support if the problem persists.");
+                ModelState.AddModelError("", "An unexpected error occurred");
             }
 
             return View(model);
         }
 
+        //Logs out the user
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme); // (Rick - Anderson, 2024b)
             return RedirectToAction("Login", "Account");
         }
 
+        //displays access denied page
         public IActionResult AccessDenied()
         {
             return View();
         }
 
+        //Redirects logged in user based on thier role
         [HttpGet]
         public IActionResult RedirectByRole()
         {

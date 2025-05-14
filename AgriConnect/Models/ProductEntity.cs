@@ -12,8 +12,8 @@ namespace AgriConnect.Models
         public ETag ETag { get; set; }
 
         public string Name { get; set; } = string.Empty;
-        public string Category { get; set; } = string.Empty;  // Category for filtering
-        public DateTime ProductionDate { get; set; }  // Production Date for date range filtering
+        public string Category { get; set; } = string.Empty;
+        public DateTime ProductionDate { get; set; }
         public string FarmerId { get; set; } = string.Empty;
     }
 }

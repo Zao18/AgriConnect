@@ -12,7 +12,7 @@ namespace AgriConnect.Models
         public ETag ETag { get; set; }
 
         public string Username { get; set; } = string.Empty;
-        public string PasswordHash { get; set; } = string.Empty; // Will store hashed password
+        public string PasswordHash { get; set; } = string.Empty; //stores hashed password
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;

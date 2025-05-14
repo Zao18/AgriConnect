@@ -7,7 +7,8 @@ using System.Security.Cryptography;
 
 namespace AgriConnect.Controllers
 {
-    [Authorize(Roles = "Employee")]
+    //this is only accessible to employees and this manages the farmer CRUD operations
+    [Authorize(Roles = "Employee")] //(Rick-Anderson, 2024)
     public class FarmersController : Controller
     {
         private readonly ITableStorageService<FarmerEntity> _farmerService;
@@ -19,6 +20,7 @@ namespace AgriConnect.Controllers
             _productService = productService;
         }
 
+        // this shows all of the farmers
         public async Task<IActionResult> Index()
         {
             try
@@ -33,40 +35,42 @@ namespace AgriConnect.Controllers
             }
         }
 
+        //displays the create farmer form
         public IActionResult Create()
         {
             return View();
         }
 
+        // this handles all of the farmer creation
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FarmerEntity farmer)
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "Please fix validation errors and try again.";
+                TempData["ErrorMessage"] = "Please fix validation errors and try again";
                 return View(farmer);
             }
 
-            // Set Partition and Row keys
+            // this sets partition and row keys
             farmer.PartitionKey = "Farmers";
             farmer.RowKey = farmer.Username;
 
-            // Hash password securely
+            // this hashes the password
             farmer.PasswordHash = HashPassword(farmer.PasswordHash);
 
             try
             {
-                // Check if farmer already exists
+                // checks if the farmer already exists
                 var existingFarmer = await _farmerService.GetEntityAsync("Farmers", farmer.Username);
                 if (existingFarmer != null)
                 {
-                    ModelState.AddModelError("Username", "Username already exists.");
+                    ModelState.AddModelError("Username", "Username already exists");
                     return View(farmer);
                 }
 
                 await _farmerService.AddEntityAsync(farmer);
-                TempData["SuccessMessage"] = "Farmer created successfully.";
+                TempData["SuccessMessage"] = "Farmer created successfully";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -76,37 +80,39 @@ namespace AgriConnect.Controllers
             }
         }
 
+        // this hashes the farmers password before storing it in azure
         private string HashPassword(string password)
         {
-            using var sha256 = SHA256.Create();
+            using var sha256 = SHA256.Create(); // (www.youtube.com, n.d.)
             var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             return Convert.ToBase64String(hashBytes);
         }
 
+        //deletes the farmer and their products
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string partitionKey, string rowKey)
         {
             try
             {
-                // Step 1: Get all products
+                // gets all of the products
                 var allProducts = await _productService.GetAllEntitiesAsync();
 
-                // Step 2: Filter by farmer
+                // filters by the farmer
                 var productsToDelete = allProducts
                     .Where(p => p.FarmerId.Equals(rowKey, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
-                // Step 3: Delete each product
+                // delete each porduct
                 foreach (var product in productsToDelete)
                 {
                     await _productService.DeleteEntityAsync(product.PartitionKey, product.RowKey);
                 }
 
-                // Step 4: Delete farmer
+                // deletes farmer
                 await _farmerService.DeleteEntityAsync(partitionKey, rowKey);
 
-                TempData["SuccessMessage"] = "Farmer and related products deleted successfully.";
+                TempData["SuccessMessage"] = "Farmer and thier products have been deleted successfully";
             }
             catch (Exception ex)
             {

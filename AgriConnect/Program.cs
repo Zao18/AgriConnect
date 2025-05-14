@@ -59,7 +59,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();
-app.UseAuthentication(); // ? Enables cookie auth
+app.UseAuthentication(); //(Rick - Anderson, 2024b)
 app.UseAuthorization();
 
 // Default route

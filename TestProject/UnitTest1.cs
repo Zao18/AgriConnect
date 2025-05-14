@@ -18,7 +18,6 @@ namespace TestProject
         [Fact]
         public async Task CreateProduct_ShouldAddProduct_AndRedirectToIndex()
         {
-            // Arrange
             var mockProductService = new Mock<ITableStorageService<ProductEntity>>();
             var mockFarmerService = new Mock<ITableStorageService<FarmerEntity>>();
 
@@ -30,14 +29,11 @@ namespace TestProject
                 FarmerId = "farmer123"
             };
 
-            // Setup mock to simulate successful save
             mockProductService.Setup(s => s.AddEntityAsync(It.IsAny<ProductEntity>()))
                               .Returns(Task.CompletedTask);
 
-            // Controller setup
             var controller = new ProductsController(mockProductService.Object, mockFarmerService.Object);
 
-            // Simulate User.Identity.Name and role
             var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, "farmer123"),
@@ -49,14 +45,11 @@ namespace TestProject
                 HttpContext = new DefaultHttpContext { User = user }
             };
 
-            // TempData setup for controller (required for redirect)
             var tempData = new TempDataDictionary(controller.ControllerContext.HttpContext, Mock.Of<ITempDataProvider>());
             controller.TempData = tempData;
 
-            // Act
             var result = await controller.Create(testProduct);
 
-            // Assert
             var redirect = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", redirect.ActionName);
 
