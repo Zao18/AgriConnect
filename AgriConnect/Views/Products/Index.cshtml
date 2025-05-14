@@ -1,0 +1,212 @@
+﻿@model AgriConnect.Models.ProductFilterViewModel
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;700&display=swap" rel="stylesheet">
+
+<!-- Meta Viewport -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        font-family: 'Nunito', sans-serif;
+        background-color: #f4f7f4;
+        color: #2f4f2f;
+    }
+
+    h1 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form-group label {
+        color: #388e3c;
+        font-weight: bold;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #a5d6a7;
+        background-color: #ffffff;
+        padding: 10px;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: #2e7d32;
+        }
+
+    .btn-primary {
+        background-color: #388e3c;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #2e7d32;
+        }
+
+    .btn-secondary {
+        background-color: #c8e6c9;
+        border: none;
+        color: #388e3c;
+    }
+
+        .btn-secondary:hover {
+            background-color: #a5d6a7;
+        }
+
+    .btn-success {
+        background-color: #66bb6a;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+    .table {
+        background-color: #ffffff;
+        border: 1px solid #a5d6a7;
+        border-radius: 8px;
+    }
+
+    .table-bordered th, .table-bordered td {
+        padding: 12px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table-bordered th {
+        background-color: #388e3c;
+        color: white;
+        font-weight: bold;
+    }
+
+    .table-bordered td {
+        border-color: #a5d6a7;
+    }
+
+    .text-center {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+    }
+
+    .alert-success {
+        background-color: #c8e6c9;
+        color: #2e7d32;
+    }
+
+    .alert-danger {
+        background-color: #ffcdd2;
+        color: #d32f2f;
+    }
+
+    .create-product-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #2e7d32;
+        font-weight: 600;
+    }
+
+        .create-product-link:hover {
+            color: #388e3c;
+            text-decoration: underline;
+        }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    @@media (max-width: 768px) {
+        .btn
+
+    {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    }
+</style>
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="get" class="mb-4">
+    <div class="form-row row">
+        <div class="form-group col-md-6 col-lg-3">
+            <label for="selectedFarmerId">Select Farmer</label>
+            <select asp-for="SelectedFarmerId" asp-items="Model.FarmerOptions" class="form-control">
+                <option value="">Farmers</option>
+            </select>
+        </div>
+        <div class="form-group col-md-6 col-lg-3">
+            <label for="productCategory">Product Category</label>
+            <input asp-for="ProductCategory" class="form-control" placeholder="Enter Category" />
+        </div>
+        <div class="form-group col-md-6 col-lg-3">
+            <label for="startDate">Start Date</label>
+            <input asp-for="StartDate" type="date" class="form-control" />
+        </div>
+        <div class="form-group col-md-6 col-lg-3">
+            <label for="endDate">End Date</label>
+            <input asp-for="EndDate" type="date" class="form-control" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+    <a asp-action="Index" class="btn btn-secondary">Reset</a>
+</form>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New Product</a>
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Production Date</th>
+                <th>Farmer ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FilteredProducts)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Category</td>
+                    <td>@item.ProductionDate.ToShortDateString()</td>
+                    <td>@item.FarmerId</td>
+                    <td>
+                        <form asp-action="Delete" asp-route-partitionKey="@item.PartitionKey" asp-route-rowKey="@item.RowKey" method="post" style="display:inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

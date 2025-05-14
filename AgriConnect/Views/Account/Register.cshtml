@@ -1,0 +1,112 @@
+﻿@model AgriConnect.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Nunito', sans-serif;
+        background-color: #f4f7f4;
+        color: #2f4f2f;
+    }
+
+    .register-container {
+        background: #eaf3ea;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        margin: 4rem auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .register-container h2 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 1.5rem;
+        }
+
+    .btn-primary {
+        background-color: #388e3c;
+        border: none;
+        width: 100%;
+        padding: 0.75rem;
+        font-weight: bold;
+    }
+
+        .btn-primary:hover {
+            background-color: #2e7d32;
+        }
+
+    a {
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+        color: #2e7d32;
+        font-weight: 600;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
+
+    .validation-summary-errors {
+        padding: 10px;
+        background-color: #fbe9e7;
+        border-left: 5px solid #e53935;
+        margin-bottom: 20px;
+        color: #c62828;
+    }
+</style>
+
+<div class="container">
+    <div class="register-container">
+        <h2>@ViewData["Title"]</h2>
+
+        <div asp-validation-summary="All" class="validation-summary-errors"></div>
+
+        <form asp-action="Register" method="post" novalidate>
+            <div class="mb-3">
+                <label asp-for="UserName" class="form-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Role" class="form-label"></label>
+                <select asp-for="Role" class="form-control" asp-items="Html.GetEnumSelectList<UserRole>()">
+                    <option value="">-- Select Role --</option>
+                </select>
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+
+        <a href="@Url.Action("Login", "Account")">Already have an account? Login here</a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

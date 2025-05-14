@@ -1,0 +1,156 @@
+﻿@model AgriConnect.Models.ProductEntity
+@{
+    ViewData["Title"] = "Create Product";
+    var farmerList = ViewBag.Farmers as List<SelectListItem>;
+}
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;700&display=swap" rel="stylesheet">
+
+<!-- Meta Viewport -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        font-family: 'Nunito', sans-serif;
+        background-color: #f4f7f4;
+        color: #2f4f2f;
+    }
+
+    h1 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .product-form-container {
+        background: #eaf3ea;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 900px;
+        margin: 60px auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            color: #388e3c;
+            font-weight: bold;
+        }
+
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #a5d6a7;
+        background-color: #ffffff;
+        padding: 10px;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: #2e7d32;
+        }
+
+    .btn-primary {
+        background-color: #388e3c;
+        border: none;
+        padding: 10px 20px;
+    }
+
+        .btn-primary:hover {
+            background-color: #2e7d32;
+        }
+
+    .text-center {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .alert-success {
+        background-color: #c8e6c9;
+        color: #2e7d32;
+    }
+
+    .alert-danger {
+        background-color: #ffcdd2;
+        color: #d32f2f;
+    }
+
+    @@media (max-width: 768px) {
+        .btn-primary
+
+    {
+        width: 100%;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .form-control {
+        font-size: 1rem;
+    }
+
+    }
+</style>
+
+<div class="product-form-container">
+    <h1>@ViewData["Title"]</h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Category"></label>
+            <input asp-for="Category" class="form-control" />
+            <span asp-validation-for="Category" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ProductionDate"></label>
+            <input asp-for="ProductionDate" type="date" class="form-control" />
+            <span asp-validation-for="ProductionDate" class="text-danger"></span>
+        </div>
+
+        @if (User.IsInRole("Employee"))
+        {
+            <div class="form-group">
+                <label asp-for="FarmerId"></label>
+                <select asp-for="FarmerId" class="form-control" asp-items="farmerList"></select>
+                <span asp-validation-for="FarmerId" class="text-danger"></span>
+            </div>
+        }
+        else
+        {
+            <input type="hidden" asp-for="FarmerId" value="@User.Identity.Name" />
+        }
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
