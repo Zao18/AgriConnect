@@ -51,3 +51,20 @@ General User
 Farmer
 
 - Access to farmer-specific views and data.
+
+
+Reference list
+
+Patil, J. (2022). Implementation of Unit Test using Xunit and Moq in .NET Core 6 Web API. [online] Medium. Available at: https://medium.com/@jaydeepvpatil225/implementation-of-unit-test-using-xunit-and-moq-in-net-core-6-web-api-539205f1d38f.
+
+Renan (2021). What Are Alternative Farming Systems? [online] Tractor Transport. Available at: https://www.tractortransport.com/blog/what-are-alternative-farming-systems/.
+
+Rick-Anderson (2024a). Role-based authorization in ASP.NET Core. [online] Microsoft.com. Available at: https://learn.microsoft.com/en-us/aspnet/core/security/authorization/roles?view=aspnetcore-9.0.
+
+Rick-Anderson (2024b). Use cookie authentication without ASP.NET Core Identity. [online] Microsoft.com. Available at: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-9.0.
+
+tdykstra (2024). Tutorial: Add sorting, filtering, and paging - ASP.NET MVC with EF Core. [online] Microsoft.com. Available at: https://learn.microsoft.com/en-us/aspnet/core/data/ef-mvc/sort-filter-page?view=aspnetcore-9.0&utm_source=chatgpt.com [Accessed 14 May 2025].
+
+W3Schools (1999). W3Schools online web tutorials. [online] W3schools.com. Available at: https://www.w3schools.com/.
+
+www.youtube.com. (n.d.). SHA-256 | COMPLETE Step-By-Step Explanation (W/ Example). [online] Available at: https://www.youtube.com/watch?v=orIgy2MjqrA [Accessed 6 Mar. 2024].
