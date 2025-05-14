@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Include="wwwroot\Images\Farming.jpeg" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Azure.Data.Tables" Version="12.11.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />

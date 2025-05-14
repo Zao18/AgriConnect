@@ -2,15 +2,21 @@
     ViewData["Title"] = "Home Page";
 }
 
-<!-- Optional Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;700&display=swap" rel="stylesheet">
 
 <style>
     body {
+        background-image: url('@Url.Content("~/Images/Farming.jpeg")');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         font-family: 'Nunito', sans-serif;
         background-color: #f4f7f4;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 
     .home-container {
@@ -22,6 +28,7 @@
         margin: 40px auto;
         max-width: 800px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        flex: 1;
     }
 
         .home-container h1 {
@@ -44,12 +51,20 @@
         margin-left: auto;
         margin-right: auto;
     }
+
+    footer {
+        background-color: white;
+        padding: 20px 0;
+        text-align: center;
+        margin-top: auto;
+    }
 </style>
 
-<div class="home-container">
-    <h1>Welcome to Agri-Energy Connect</h1>
-    <p>Your platform for sustainable farming, energy innovation, and green collaboration.</p>
-    <div class="leaf-divider"></div>
-</div>
-
+<body>
+    <div class="home-container">
+        <h1>Welcome to Agri-Energy Connect</h1>
+        <p>Your platform for sustainable farming, energy innovation, and green collaboration.</p>
+        <div class="leaf-divider"></div>
+    </div>
+</body>
 
