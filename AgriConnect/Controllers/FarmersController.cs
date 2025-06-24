@@ -95,21 +95,17 @@ namespace AgriConnect.Controllers
         {
             try
             {
-                // gets all of the products
                 var allProducts = await _productService.GetAllEntitiesAsync();
 
-                // filters by the farmer
                 var productsToDelete = allProducts
                     .Where(p => p.FarmerId.Equals(rowKey, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
-                // delete each porduct
                 foreach (var product in productsToDelete)
                 {
                     await _productService.DeleteEntityAsync(product.PartitionKey, product.RowKey);
                 }
 
-                // deletes farmer
                 await _farmerService.DeleteEntityAsync(partitionKey, rowKey);
 
                 TempData["SuccessMessage"] = "Farmer and thier products have been deleted successfully";

@@ -77,74 +77,20 @@
     }
 
     @@media (max-width: 768px) {
-        .btn-primary
+        .btn-primary {
+            width: 100%;
+        }
 
-    {
-        width: 100%;
-    }
+        .form-group {
+            width: 100%;
+        }
 
-    .form-group {
-        width: 100%;
-    }
-
-    .form-control {
-        font-size: 1rem;
-    }
-
+        .form-control {
+            font-size: 1rem;
+        }
     }
 </style>
 
-<div class="product-form-container">
-    <h1>@ViewData["Title"]</h1>
+<div class="product-
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger">@TempData["Error"]</div>
-    }
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
-
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-    <form asp-action="Create" method="post">
-        <div class="form-group">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Category"></label>
-            <input asp-for="Category" class="form-control" />
-            <span asp-validation-for="Category" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="ProductionDate"></label>
-            <input asp-for="ProductionDate" type="date" class="form-control" />
-            <span asp-validation-for="ProductionDate" class="text-danger"></span>
-        </div>
-
-        @if (User.IsInRole("Employee"))
-        {
-            <div class="form-group">
-                <label asp-for="FarmerId"></label>
-                <select asp-for="FarmerId" class="form-control" asp-items="farmerList"></select>
-                <span asp-validation-for="FarmerId" class="text-danger"></span>
-            </div>
-        }
-        else
-        {
-            <input type="hidden" asp-for="FarmerId" value="@User.Identity.Name" />
-        }
-
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
 
